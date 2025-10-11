@@ -12,8 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('order_items', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->id(); // Sesuai dengan id int(11) auto_increment
+            $table->foreignId('order_id')->constrained()->onDelete('cascade'); // Foreign key ke tabel orders
+            $table->foreignId('product_id')->constrained()->onDelete('cascade'); // Foreign key ke tabel products
+            $table->decimal('price', 12, 2); // Sesuai dengan price decimal(12,2)
+            $table->unsignedInteger('qty'); // Sesuai dengan qty int(11)
+            $table->decimal('subtotal', 12, 2); // Sesuai dengan subtotal decimal(12,2)
         });
     }
 

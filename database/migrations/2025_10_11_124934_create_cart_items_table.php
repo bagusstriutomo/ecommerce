@@ -12,8 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('cart_items', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->id(); // Sesuai dengan id int(11) auto_increment
+            $table->foreignId('cart_id')->constrained()->onDelete('cascade'); // Foreign key ke tabel carts
+            $table->foreignId('product_id')->constrained()->onDelete('cascade'); // Foreign key ke tabel products
+            $table->unsignedInteger('qty')->default(1); // Sesuai dengan qty int(11) default 1
         });
     }
 

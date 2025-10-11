@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('categories', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->id(); // Sesuai dengan id int(11) auto_increment
+            $table->string('name', 100); // Sesuai dengan name varchar(100)
+            $table->timestamp('created_at')->useCurrent(); // Sesuai dengan created_at
         });
     }
 

@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('carts', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->id(); // Sesuai dengan id int(11) auto_increment
+            $table->foreignId('user_id')->unique()->constrained()->onDelete('cascade'); // Foreign key ke tabel users
+            $table->timestamp('created_at')->useCurrent(); // Sesuai dengan created_at
         });
     }
 
