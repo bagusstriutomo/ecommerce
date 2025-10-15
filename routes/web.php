@@ -6,14 +6,11 @@ use App\Http\Controllers\ProfileController;
 // --- Controller untuk Publik & Pengguna ---
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 
 // --- Controller Khusus untuk Admin ---
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\CartController;
-use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
-use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 
 /*
@@ -32,14 +29,12 @@ use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 // ======================================================================
 
 // Rute halaman utama (katalog produk) untuk semua pengunjung
-*/
 
 // --- RUTE UNTUK PENGUNJUNG & PENGGUNA BIASA ---
 Route::get('/', [ProductController::class, 'index'])->name('home');
 Route::get('/product/{product}', [ProductController::class, 'show'])->name('product.show');
 
-// Rute yang membutuhkan pengguna untuk login (Middleware 'auth')
-Route::middleware('auth')->group(function () {
+
     
     // Rute untuk keranjang belanja (Departemen C) - DIBAWAH AUTH
     // Catatan: Biasanya index (melihat keranjang) bisa publik, tapi untuk keamanan, kita taruh di sini.
@@ -92,17 +87,3 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(
 
 // File rute autentikasi dari Laravel Breeze
 require __DIR__.'/auth.php';
-// --- ZONA KHUSUS ADMIN ---
-Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(function () {
-    
-    // Rute untuk Laporan Pesanan Admin (Misi Anda - Departemen D)
-    Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
-
-    // Rute untuk Manajemen Inventaris (Departemen B)
-    Route::resource('/categories', AdminCategoryController::class);
-    Route::resource('/products', AdminProductController::class);
-});
-
-
-require __DIR__.'/auth.php';
-
