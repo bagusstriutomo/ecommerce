@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+// Hapus 'use App\Providers\RouteServiceProvider;' karena sudah tidak ada
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,7 +29,13 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        // 1. Logika untuk redirect admin
+        if (Auth::user()->role === 'admin') {
+            return redirect()->route('admin.products.index');
+        }
+
+        // 2. Logika untuk redirect pengguna biasa ke halaman utama
+        return redirect()->intended('/'); // Diubah dari RouteServiceProvider::HOME menjadi '/'
     }
 
     /**

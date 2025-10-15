@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id(); // Sesuai dengan id int(11) auto_increment
             $table->string('name', 100); // Sesuai dengan name varchar(100)
             $table->string('email', 100)->unique(); // Sesuai dengan email varchar(100) unique
-            $table->string('password'); // Diubah dari 'password' menjadi 'password_hash' varchar(255)
+            $table->string('password', 255); // Diubah dari 'password' menjadi 'password_hash' varchar(255)
             $table->enum('role', ['user', 'admin'])->default('user'); // Ditambahkan sesuai 'role' enum
             $table->string('phone_number', 20)->nullable(); // Ditambahkan sesuai 'phone_number' varchar(20) nullable
             $table->timestamps(); // Ini akan membuat created_at dan updated_at
