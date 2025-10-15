@@ -3,6 +3,7 @@
         <div class="flex justify-between h-16">
             <div class="flex">
                 <div class="shrink-0 flex items-center">
+                    {{-- Diubah agar mengarah ke halaman utama (katalog) --}}
                     <a href="{{ route('home') }}">
                         <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
                     </a>
@@ -12,11 +13,27 @@
                     <x-nav-link :href="route('home')" :active="request()->routeIs('home')">
                         {{ __('Home') }}
                     </x-nav-link>
+
+                    {{-- Ditambahkan: Link yang hanya muncul jika sudah login --}}
+                    @auth
+                        {{-- Tampilkan link ini hanya jika user adalah admin --}}
+                        @if(Auth::user()->role === 'admin')
+                            <x-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">
+                                {{ __('Manajemen Produk') }}
+                            </x-nav-link>
+                        @endif
+
+                        {{-- Link keranjang untuk semua user yang login --}}
+                        <x-nav-link href="#">
+                            {{ __('Keranjang') }}
+                        </x-nav-link>
+                    @endauth
                 </div>
             </div>
 
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 @auth
+                    {{-- Jika sudah login, tampilkan dropdown nama --}}
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
                             <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
@@ -47,6 +64,7 @@
                         </x-slot>
                     </x-dropdown>
                 @else
+                    {{-- Jika belum login, tampilkan link Login & Register --}}
                     <a href="{{ route('login') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Log in</a>
 
                     @if (Route::has('register'))
@@ -74,28 +92,49 @@
         </div>
 
         @auth
-        <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
-            <div class="px-4">
-                <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
-            </div>
+            <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
+                <div class="px-4">
+                    <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ Auth::user()->name }}</div>
+                    <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
+                </div>
 
-            <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
-                </x-responsive-nav-link>
-
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-
-                    <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                        {{ __('Log Out') }}
+                <div class="mt-3 space-y-1">
+                    <x-responsive-nav-link :href="route('profile.edit')">
+                        {{ __('Profile') }}
                     </x-responsive-nav-link>
-                </form>
+                    
+                    {{-- Ditambahkan: Link admin dan keranjang di menu responsif --}}
+                    @if(Auth::user()->role === 'admin')
+                        <x-responsive-nav-link :href="route('admin.products.index')">
+                            {{ __('Manajemen Produk') }}
+                        </x-responsive-nav-link>
+                    @endif
+                    <x-responsive-nav-link href="#">
+                        {{ __('Keranjang') }}
+                    </x-responsive-nav-link>
+
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <x-responsive-nav-link :href="route('logout')"
+                                onclick="event.preventDefault();
+                                            this.closest('form').submit();">
+                            {{ __('Log Out') }}
+                        </x-responsive-nav-link>
+                    </form>
+                </div>
             </div>
-        </div>
+        @else
+            {{-- Ditambahkan: Link Login/Register di menu responsif --}}
+            <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
+                 <div class="mt-3 space-y-1">
+                    <x-responsive-nav-link :href="route('login')">
+                        {{ __('Log in') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('register')">
+                        {{ __('Register') }}
+                    </x-responsive-nav-link>
+                 </div>
+            </div>
         @endauth
     </div>
 </nav>

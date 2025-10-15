@@ -51,4 +51,4 @@
             </div>
         </div>
     </div>
-</x-app-layout> {{-- <-- Pastikan tag penutup ini ada di akhir file --}}
+</x-app-layout>
